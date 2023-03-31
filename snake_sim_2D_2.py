@@ -1,9 +1,10 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.animation import FuncAnimation
+import time
 
 num_joints = 4
-joint_length = 0.8
+joint_length = 0.4
 
 snake_y = np.zeros(num_joints)
 snake_x = np.arange(num_joints) * joint_length
@@ -45,18 +46,37 @@ def update(t):
     snake_x = np.arange(num_joints) * joint_length
 
 angles = np.zeros(num_joints)
-phases = np.array([0, 1, 2, 3])
+phases = np.array([0, 1, 2, 3, 4])
 shift = (2 * np.pi) / num_joints
 p = 0
+
+
+def rotate(angle, position):
+    return np.array([
+    [np.cos(1)]
+])
+
 def sin_wave(t):
     global p
-    p += 1
-    for i in range(num_joints):
-        angles[i] = np.sin(i * shift + p)
-        snake_y[i] = snake_y[i - 1] + joint_length * angles[i]
+    p += 0.5
+    for i in range(1, num_joints):
+        snake_x = np.arange(num_joints) * joint_length
+        angles[i - 1] = np.sin(0.5 * (i * shift + p))
+        if(i != num_joints):
+            snake_y[i - 1] = snake_y[i] + joint_length * angles[i - 1]
+        else:
+            snake_y[i - 1] = joint_length * angles[i - 1]
 
-    snake_x = np.arange(num_joints) * joint_length
 
+def angle():
+    print(snake_x)
+    print(snake_y)
+    save_x = snake_x[1]
+    save_y = snake_y[1]
+    snake_x[1] = save_x * np.cos(np.pi / 2) - save_y * np.sin(np.pi / 2)
+    snake_y[1] = save_x * np.sin(np.pi / 2) + save_y * np.cos(np.pi / 2)
+    print(snake_x)
+    print(snake_y)
 
 #def update_snake_position(t):
  #   global snake_x, snake_y
