@@ -2,11 +2,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.animation import FuncAnimation
 
-num_joints = 12
-joint_length = 0.5
+num_joints = 4
+joint_length = 0.8
 
-snake_x = np.zeros(num_joints)
-snake_y = np.arange(num_joints) * joint_length
+snake_y = np.zeros(num_joints)
+snake_x = np.arange(num_joints) * joint_length
 
 freq = 1.0
 amp = 0.5
@@ -29,14 +29,11 @@ G_matrix = np.zeros(num_joints ** 2).reshape((num_joints, num_joints))
 def update(t):
     global snake_x, snake_y, vector_g, k, second
     k = k % num_joints
-    for i in range(1, num_joints):
+    for i in range(num_joints):
         second[i] = gait_equation(t - 0.1*i, i)
 
-    vector_g = np.diag(np.outer(second, identity[k]).T)
-
-    #for l in range(1, num_joints):
-     #   if(vector_g.any() != 0):
-      #      G_matrix[l] = vector_g[l]
+    vector_g = np.diag(np.outer(second, identity[k - 1]).T)
+    print(vector_g)
 
     k = k + 1
     for j in range(1, num_joints): # column j of G
@@ -47,6 +44,20 @@ def update(t):
 
     snake_x = np.arange(num_joints) * joint_length
 
+angles = np.zeros(num_joints)
+phases = np.array([0, 1, 2, 3])
+shift = (2 * np.pi) / num_joints
+p = 0
+def sin_wave(t):
+    global p
+    p += 1
+    for i in range(num_joints):
+        angles[i] = np.sin(i * shift + p)
+        snake_y[i] = snake_y[i - 1] + joint_length * angles[i]
+
+    snake_x = np.arange(num_joints) * joint_length
+
+
 #def update_snake_position(t):
  #   global snake_x, snake_y
   #  for i in range(1, num_joints):
@@ -56,12 +67,13 @@ def update(t):
 def animate_snake(i):
     plt.clf()
     #update_snake_position(i/100.0)
-    update(i / 5.0)
+    #update(i / 5.0)
+    sin_wave(i / 100.0)
     plt.plot(snake_x, snake_y, 'ko-', lw=2)
     plt.xlim([-0.2, joint_length*num_joints+0.2])
     plt.ylim([-0.2, joint_length*num_joints+0.2])
     plt.title('Snake Motion')
 
 fig = plt.figure(figsize=(7,7))
-anim = FuncAnimation(fig, animate_snake, interval=500) # 10
+anim = FuncAnimation(fig, animate_snake, interval=50) # 10
 plt.show()    
