@@ -56,28 +56,3 @@ for i in range(len(t)):
 
     for j in range(num_joints):
         snake_x[j] = snake_x[j] + 1
-
-"""
-for i in range(len(t)):
-    l = 1
-    for j in range(num_joints):
-        snake_y[j] = offset + l * amplitude * np.sin(freq * t[i] + wavelength * j*2 * np.pi/(num_joints - 1))
-
-        l /= amplitude_factor(amplitude, 0.5, num_joints - 1)
-
-    joints.set_offsets(np.c_[snake_x, snake_y])
-    plt.draw()
-    plt.pause(0.001)    
-
-
-for i in range(len(t)):
-    l = 0.14
-    for j in range(num_joints):
-        snake_y[j] = offset + l * amplitude * np.sin(freq * t[i] + wavelength * j*2 * np.pi/(num_joints - 1))
-
-        l *= amplitude_factor(amplitude, 0.5, num_joints - 1)    
-
-    joints.set_offsets(np.c_[snake_x, snake_y])
-    plt.draw()
-    plt.pause(0.001)
-"""
